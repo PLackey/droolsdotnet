@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("drools.dotnet")]
-[assembly: AssemblyDescription("Rete-based Business Rule Engine for Dotnet")]
+[assembly: AssemblyDescription("Rete-based Business Rule Engine for .NET")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Sahi Technologies Pvt Ltd")]
 [assembly: AssemblyProduct("drools.dotnet")]
-[assembly: AssemblyCopyright("Copyright ©  2007")]
+[assembly: AssemblyCopyright("Copyright © 2007-2024")]
 [assembly: AssemblyTrademark("Esahi BRMS")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,6 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyFileVersion("2.0.0.0")]
+[assembly: AssemblyInformationalVersion("2.0.0")]

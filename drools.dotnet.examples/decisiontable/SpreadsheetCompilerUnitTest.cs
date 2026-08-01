@@ -42,12 +42,12 @@ namespace org.drools.dotnet.examples
 			SpreadsheetCompiler converter = new SpreadsheetCompiler();
 
             System.String drl = converter.Compile(new System.IO.FileStream(System.Environment.CurrentDirectory + "\\resources\\data\\MultiSheetDST.xls", System.IO.FileMode.Open), InputType.XLS);
-            Assert.IsNotNull(drl);
+            Assert.That(drl, Is.Not.Null);
 			
 			
-			Assert.IsTrue(drl.IndexOf("rule \"How cool am I_12\"") > drl.IndexOf("rule \"How cool am I_11\""));
-			Assert.IsTrue(drl.IndexOf("import example.model.User;") > - 1);
-			Assert.IsTrue(drl.IndexOf("import example.model.Car;") > - 1);
+			Assert.That(drl.IndexOf("rule \"How cool am I_12\"") > drl.IndexOf("rule \"How cool am I_11\""), Is.True);
+			Assert.That(drl.IndexOf("import example.model.User;") > - 1, Is.True);
+			Assert.That(drl.IndexOf("import example.model.Car;") > - 1, Is.True);
 		}
 		
         [Test]
@@ -56,7 +56,7 @@ namespace org.drools.dotnet.examples
 			SpreadsheetCompiler converter = new SpreadsheetCompiler();
             System.IO.Stream stream = Assembly.GetAssembly(this.GetType()).GetManifestResourceStream("org.drools.dotnet.examples.resources.data.MultiSheetDST.xls");
             System.String drl = converter.Compile(stream, "Another Sheet");
-			Assert.IsNotNull(drl);
+			Assert.That(drl, Is.Not.Null);
 		}
 		
         [Test]
@@ -65,9 +65,9 @@ namespace org.drools.dotnet.examples
 			SpreadsheetCompiler converter = new SpreadsheetCompiler();
 			System.IO.Stream stream = Assembly.GetAssembly(this.GetType()).GetManifestResourceStream("org.drools.dotnet.examples.resources.data.ComplexWorkbook.csv");
             System.String drl = converter.Compile(stream, InputType.CSV);
-			Assert.IsNotNull(drl);
-			Assert.IsTrue(drl.IndexOf("myObject.setIsValid(1, 2)") > 0);
-			Assert.IsTrue(drl.IndexOf("myObject.size () > 50") > 0);
+			Assert.That(drl, Is.Not.Null);
+			Assert.That(drl.IndexOf("myObject.setIsValid(1, 2)") > 0, Is.True);
+			Assert.That(drl.IndexOf("myObject.size () > 50") > 0, Is.True);
 			//System.out.println(drl);
 		}
 		
@@ -78,9 +78,9 @@ namespace org.drools.dotnet.examples
             System.IO.Stream stream = Assembly.GetAssembly(this.GetType()).GetManifestResourceStream("org.drools.dotnet.examples.resources.data.BasicWorkbook.xls");
 			System.String drl = converter.Compile(stream, InputType.XLS);
 			
-			Assert.IsNotNull(drl);
-			Assert.IsTrue(drl.IndexOf("This is a function block") > - 1);
-			Assert.IsTrue(drl.IndexOf("global Class1 obj1;") > - 1);
+			Assert.That(drl, Is.Not.Null);
+			Assert.That(drl.IndexOf("This is a function block") > - 1, Is.True);
+			Assert.That(drl.IndexOf("global Class1 obj1;") > - 1, Is.True);
 			//System.out.println(drl);
 		}
 

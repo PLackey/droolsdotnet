@@ -43,15 +43,15 @@ namespace org.drools.dotnet.examples
 			SpreadsheetCompiler converter = new SpreadsheetCompiler();
             System.IO.Stream stream = Assembly.GetAssembly(this.GetType()).GetManifestResourceStream("org.drools.dotnet.examples.resources.data.IntegrationExampleTest.xls");
 			System.String drl = converter.Compile(stream, InputType.XLS);
-			Assert.IsNotNull(drl);
+			Assert.That(drl, Is.Not.Null);
 			//COMPILE
 			PackageBuilder builder = new PackageBuilder();
 			builder.AddPackageFromDrl(drl);
 			
 			Package pkg = builder.GetPackage();
-			Assert.IsNotNull(pkg);
+			Assert.That(pkg, Is.Not.Null);
 			System.Console.Out.WriteLine(pkg.GetErrorSummary());
-			Assert.AreEqual(0, builder.GetErrors().Length);
+			Assert.That(builder.GetErrors().Length, Is.EqualTo(0));
 			
 			RuleBase rb = RuleBaseFactory.NewRuleBase();
 			rb.AddPackage(pkg);
@@ -64,7 +64,7 @@ namespace org.drools.dotnet.examples
 			System.Collections.IList list = new System.Collections.ArrayList();
 			wm.setGlobal("list", list);
 			wm.fireAllRules();
-			Assert.AreEqual(1, list.Count);
+			Assert.That(list.Count, Is.EqualTo(1));
 		}
         private java.io.InputStream GetJavaInputStream(System.IO.Stream stream)
         {
