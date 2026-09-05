@@ -1,17 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>Drools.NET.Core</RootNamespace>
     <AssemblyName>Drools.NET.Core</AssemblyName>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Drools.NET.Modern</PackageId>
-    <PackageVersion>3.0.0</PackageVersion>
-    <PackageDescription>Pure .NET 9 implementation of Drools.NET Business Rule Engine - No IKVM dependencies</PackageDescription>
+    <PackageVersion>4.0.0</PackageVersion>
+    <PackageDescription>Pure .NET 10 implementation of Drools.NET Business Rule Engine - No IKVM dependencies</PackageDescription>
     <PackageAuthors>Sahi Technologies Pvt Ltd</PackageAuthors>
-    <PackageTags>rules engine;business rules;rete;drools;dotnet9;modern;pure-dotnet</PackageTags>
+    <PackageTags>rules engine;business rules;rete;drools;dotnet10;modern;pure-dotnet</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/your-repo/droolsdotnet</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -21,9 +21,16 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Title>Drools.NET Modern - Pure .NET 9 Business Rules Engine</Title>
-    <Description>A pure .NET 9 implementation of the Drools business rules engine. This is a complete rewrite that eliminates IKVM dependencies and provides 100% .NET compatibility with modern C# features.</Description>
+    <Title>Drools.NET Modern - Pure .NET 10 Business Rules Engine</Title>
+    <Description>A pure .NET 10 implementation of the Drools business rules engine. This is a complete rewrite that eliminates IKVM dependencies and provides 100% .NET compatibility with modern C# features.</Description>
     <PackageReleaseNotes>
+      v4.0.0 - .NET 10 Support
+      - Upgraded to .NET 10 LTS
+      - Latest C# language features and performance improvements
+      - Enhanced performance optimizations with .NET 10
+      - Improved nullable reference type support
+      - Better AOT compilation support
+      
       v3.0.0 - .NET 9 Support
       - Upgraded to .NET 9
       - Latest C# language features
