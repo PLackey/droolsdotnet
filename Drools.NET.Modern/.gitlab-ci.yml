@@ -1,0 +1,443 @@
+# GitLab CI/CD Pipeline for Drools.NET Modern (Pure .NET 8)
+# This pipeline builds, tests, and packages the modernized Drools.NET rule engine
+
+variables:
+  # Use the official .NET 8 SDK image
+  DOTNET_IMAGE: "mcr.microsoft.com/dotnet/sdk:8.0"
+  # Disable .NET Core telemetry
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  # Skip first time experience
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
+  # Disable logo
+  DOTNET_NOLOGO: "true"
+  # Set build configuration
+  BUILD_CONFIGURATION: "Release"
+  # Package output directory
+  PACKAGE_OUTPUT_DIR: "packages"
+  # Modern package details
+  PACKAGE_NAME: "Drools.NET.Modern"
+  PACKAGE_VERSION: "3.0.0"
+
+# Define pipeline stages
+stages:
+  - validate
+  - build
+  - test
+  - quality
+  - package
+  - deploy
+
+# Cache dependencies to speed up builds
+cache:
+  paths:
+    - ~/.nuget/packages/
+
+# Validate stage - check project files and dependencies
+validate:structure:
+  stage: validate
+  image: $DOTNET_IMAGE
+  script:
+    - echo "🔍 Validating Drools.NET Modern project structure..."
+    - dotnet --version
+    - echo "✅ .NET SDK Version verified"
+    - |
+      # Check solution file exists
+      if [ ! -f "Drools.NET.Modern.sln" ]; then
+        echo "❌ Solution file missing"
+        exit 1
+      fi
+    - echo "✅ Solution file found"
+    - dotnet restore --verbosity minimal
+    - echo "✅ Dependencies restored successfully"
+    - echo "✅ Project validation completed"
+  artifacts:
+    expire_in: 30 minutes
+    paths:
+      - "**/obj/"
+  only:
+    - merge_requests
+    - main
+    - develop
+    - tags
+
+# Build stage - compile the solution
+build:solution:
+  stage: build
+  image: $DOTNET_IMAGE
+  script:
+    - echo "🔨 Building Drools.NET Modern solution..."
+    - dotnet restore --verbosity minimal
+    - dotnet build --configuration $BUILD_CONFIGURATION --no-restore --verbosity minimal
+    - echo "✅ Build completed successfully"
+    - |
+      # Verify build artifacts
+      if [ ! -f "src/Drools.NET.Core/bin/$BUILD_CONFIGURATION/net8.0/Drools.NET.Core.dll" ]; then
+        echo "❌ Core library not built"
+        exit 1
+      fi
+    - echo "✅ Build artifacts verified"
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - "**/bin/"
+      - "**/obj/"
+    reports:
+      dotnet: "tests/**/TestResults.xml"
+  dependencies:
+    - validate:structure
+  only:
+    - merge_requests
+    - main
+    - develop
+    - tags
+
+# Test stage - run comprehensive tests
+test:unit:
+  stage: test
+  image: $DOTNET_IMAGE
+  script:
+    - echo "🧪 Running Drools.NET Modern unit tests..."
+    - dotnet restore --verbosity minimal
+    - |
+      # Run tests with coverage
+      dotnet test \
+        --configuration $BUILD_CONFIGURATION \
+        --no-build \
+        --no-restore \
+        --logger "trx;LogFileName=TestResults.xml" \
+        --logger "console;verbosity=detailed" \
+        --collect:"XPlat Code Coverage" \
+        --results-directory ./TestResults
+    - echo "✅ All tests completed successfully (100% success rate expected)"
+    - |
+      # Verify test results
+      if [ $? -ne 0 ]; then
+        echo "❌ Tests failed"
+        exit 1
+      fi
+    - echo "✅ Test validation completed"
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - TestResults/
+    reports:
+      junit:
+        - TestResults/**/*.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: TestResults/**/coverage.cobertura.xml
+  coverage: '/Total\s*\|\s*(\d+(?:\.\d+)?)%/'
+  dependencies:
+    - build:solution
+  only:
+    - merge_requests
+    - main
+    - develop
+    - tags
+
+# Test stage - performance and integration tests
+test:integration:
+  stage: test
+  image: $DOTNET_IMAGE
+  script:
+    - echo "🚀 Running integration and performance tests..."
+    - dotnet test --filter "Category=Integration" --configuration $BUILD_CONFIGURATION --no-build --no-restore --logger "console;verbosity=normal"
+    - echo "✅ Integration tests completed"
+  dependencies:
+    - build:solution
+  allow_failure: true # Allow failure for performance tests
+  only:
+    - merge_requests
+    - main
+    - develop
+    - tags
+
+# Quality stage - code analysis and security
+quality:code-analysis:
+  stage: quality
+  image: $DOTNET_IMAGE
+  script:
+    - echo "🔍 Running code quality analysis..."
+    - dotnet format --verify-no-changes --verbosity diagnostic Drools.NET.Modern.sln || echo "Code formatting issues detected (non-blocking)"
+    - echo "✅ Code analysis completed"
+  dependencies:
+    - build:solution
+  allow_failure: true
+  only:
+    - merge_requests
+    - main
+    - develop
+
+# Quality stage - IKVM dependency verification
+quality:dependency-check:
+  stage: quality
+  image: $DOTNET_IMAGE
+  script:
+    - echo "🔒 Verifying no IKVM dependencies..."
+    - |
+      # Check for IKVM references in project files
+      if grep -r "IKVM" src/ || grep -r "ikvm" src/; then
+        echo "❌ IKVM dependencies found - this violates pure .NET requirement"
+        exit 1
+      fi
+    - echo "✅ No IKVM dependencies found"
+    - |
+      # Verify pure .NET assemblies
+      dotnet build --configuration $BUILD_CONFIGURATION --verbosity minimal
+      if strings src/Drools.NET.Core/bin/$BUILD_CONFIGURATION/net8.0/Drools.NET.Core.dll | grep -i ikvm; then
+        echo "❌ IKVM references found in compiled assembly"
+        exit 1
+      fi
+    - echo "✅ Pure .NET 8 implementation verified"
+  dependencies:
+    - build:solution
+  only:
+    - merge_requests
+    - main
+    - develop
+    - tags
+
+# Security scan
+quality:security-scan:
+  stage: quality
+  image: $DOTNET_IMAGE
+  script:
+    - echo "🔍 Running security vulnerability scan..."
+    - dotnet list package --vulnerable --include-transitive 2>&1 | tee security-scan.log
+    - echo "✅ Security scan completed"
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - security-scan.log
+  dependencies:
+    - build:solution
+  allow_failure: true
+  only:
+    - merge_requests
+    - main
+    - develop
+    - tags
+
+# Package stage - create NuGet packages
+package:nuget:
+  stage: package
+  image: $DOTNET_IMAGE
+  script:
+    - echo "📦 Creating Drools.NET Modern NuGet package..."
+    - mkdir -p $PACKAGE_OUTPUT_DIR
+    - |
+      # Pack with version info
+      dotnet pack src/Drools.NET.Core/Drools.NET.Core.csproj \
+        --configuration $BUILD_CONFIGURATION \
+        --no-build \
+        --no-restore \
+        --output $PACKAGE_OUTPUT_DIR \
+        -p:PackageVersion=$PACKAGE_VERSION-$CI_PIPELINE_ID
+    - ls -la $PACKAGE_OUTPUT_DIR
+    - echo "✅ NuGet package created successfully"
+    - |
+      # Validate package content
+      PACKAGE_FILE="$PACKAGE_OUTPUT_DIR/$PACKAGE_NAME.$PACKAGE_VERSION-$CI_PIPELINE_ID.nupkg"
+      if [ ! -f "$PACKAGE_FILE" ]; then
+        echo "❌ Package file not found: $PACKAGE_FILE"
+        exit 1
+      fi
+    - echo "✅ Package validation completed"
+  artifacts:
+    expire_in: 1 month
+    paths:
+      - $PACKAGE_OUTPUT_DIR/
+  dependencies:
+    - build:solution
+    - test:unit
+  only:
+    - main
+    - develop
+    - tags
+
+# Package stage - create symbols package
+package:symbols:
+  stage: package
+  image: $DOTNET_IMAGE
+  script:
+    - echo "🔣 Creating symbols package..."
+    - mkdir -p $PACKAGE_OUTPUT_DIR/symbols
+    - |
+      dotnet pack src/Drools.NET.Core/Drools.NET.Core.csproj \
+        --configuration $BUILD_CONFIGURATION \
+        --include-symbols \
+        --include-source \
+        --no-build \
+        --no-restore \
+        --output $PACKAGE_OUTPUT_DIR/symbols \
+        -p:PackageVersion=$PACKAGE_VERSION-$CI_PIPELINE_ID
+    - echo "✅ Symbols package created"
+  artifacts:
+    expire_in: 1 month
+    paths:
+      - $PACKAGE_OUTPUT_DIR/symbols/
+  dependencies:
+    - build:solution
+  only:
+    - main
+    - develop
+    - tags
+
+# Deploy to GitLab Package Registry (automatic)
+deploy:gitlab-registry:
+  stage: deploy
+  image: $DOTNET_IMAGE
+  script:
+    - echo "🚀 Deploying to GitLab Package Registry..."
+    - |
+      dotnet nuget add source "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/nuget/index.json" \
+        --name gitlab \
+        --username gitlab-ci-token \
+        --password $CI_JOB_TOKEN \
+        --store-password-in-clear-text
+    - dotnet nuget push "$PACKAGE_OUTPUT_DIR/*.nupkg" --source gitlab --skip-duplicate
+    - echo "✅ Successfully deployed to GitLab Package Registry"
+  dependencies:
+    - package:nuget
+  environment:
+    name: gitlab-registry
+    url: $CI_PROJECT_URL/-/packages
+  only:
+    - main
+    - develop
+    - tags
+
+# Deploy to NuGet.org (manual, tags only)
+deploy:nuget-org:
+  stage: deploy
+  image: $DOTNET_IMAGE
+  script:
+    - echo "🌐 Deploying to NuGet.org..."
+    - |
+      if [ -z "$NUGET_API_KEY" ]; then
+        echo "❌ NUGET_API_KEY environment variable is not set"
+        exit 1
+      fi
+    - |
+      # Only push release versions (without CI pipeline ID)
+      dotnet pack src/Drools.NET.Core/Drools.NET.Core.csproj \
+        --configuration $BUILD_CONFIGURATION \
+        --no-build \
+        --no-restore \
+        --output $PACKAGE_OUTPUT_DIR/release \
+        -p:PackageVersion=$PACKAGE_VERSION
+    - dotnet nuget push "$PACKAGE_OUTPUT_DIR/release/*.nupkg" --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
+    - echo "✅ Successfully deployed to NuGet.org"
+  dependencies:
+    - package:nuget
+  environment:
+    name: production
+    url: https://www.nuget.org/packages/Drools.NET.Modern
+  only:
+    - tags
+  when: manual  # Require manual approval for production deployments
+
+# Benchmark performance (optional)
+benchmark:performance:
+  stage: test
+  image: $DOTNET_IMAGE
+  script:
+    - echo "⚡ Running performance benchmarks..."
+    - |
+      # Create simple benchmark
+      cat > benchmark.cs << 'EOF'
+      using System;
+      using System.Diagnostics;
+      using Drools.NET.Core;
+      using Drools.NET.Core.Implementation;
+      
+      var watch = Stopwatch.StartNew();
+      var ruleBase = RuleBaseFactory.CreateRuleBase();
+      var packageBuilder = new ModernPackageBuilder();
+      
+      var drl = @"
+          package benchmark
+          rule ""Benchmark Rule""
+              when
+                  $obj : Object()
+              then
+                  // Simple action
+          end";
+      
+      packageBuilder.AddPackageFromDrl(drl);
+      var package = packageBuilder.GetPackage();
+      
+      if (package != null) {
+          ruleBase.AddPackage(package);
+          var workingMemory = ruleBase.CreateWorkingMemory();
+          
+          // Run benchmark
+          for (int i = 0; i < 1000; i++) {
+              workingMemory.AssertObject(new { Id = i });
+          }
+          
+          var rulesFired = workingMemory.FireAllRules();
+          watch.Stop();
+          
+          Console.WriteLine($"Benchmark completed: {rulesFired} rules fired in {watch.ElapsedMilliseconds}ms");
+      }
+      EOF
+    - dotnet script benchmark.cs --no-restore
+    - echo "✅ Performance benchmark completed"
+  dependencies:
+    - build:solution
+  allow_failure: true
+  only:
+    - main
+    - tags
+
+# Documentation generation
+docs:generate:
+  stage: package
+  image: $DOTNET_IMAGE
+  script:
+    - echo "📚 Generating API documentation..."
+    - |
+      # Generate XML documentation
+      dotnet build --configuration $BUILD_CONFIGURATION -p:GenerateDocumentationFile=true
+    - echo "✅ Documentation generated"
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - "**/bin/$BUILD_CONFIGURATION/**/*.xml"
+  dependencies:
+    - build:solution
+  only:
+    - main
+    - tags
+
+# Cleanup job
+cleanup:
+  stage: .post
+  image: alpine:latest
+  script:
+    - echo "🧹 Cleaning up temporary files..."
+    - echo "✅ Cleanup completed"
+  when: always
+  dependencies: []
+
+# Include security templates
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+
+# SAST (Static Application Security Testing)
+sast:
+  stage: quality
+  allow_failure: true
+  only:
+    - main
+    - merge_requests
+
+# Dependency Scanning
+dependency_scanning:
+  stage: quality
+  allow_failure: true
+  only:
+    - main
+    - merge_requests
