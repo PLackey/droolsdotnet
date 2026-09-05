@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>org.drools.dotnet</RootNamespace>
     <AssemblyName>drools.dotnet</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -9,10 +9,10 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Drools.NET</PackageId>
-    <PackageVersion>3.0.0</PackageVersion>
-    <PackageDescription>Rete-based Business Rule Engine for .NET 9</PackageDescription>
+    <PackageVersion>4.0.0</PackageVersion>
+    <PackageDescription>Rete-based Business Rule Engine for .NET 10</PackageDescription>
     <PackageAuthors>Sahi Technologies Pvt Ltd</PackageAuthors>
-    <PackageTags>rules engine;business rules;rete;drools;dotnet9</PackageTags>
+    <PackageTags>rules engine;business rules;rete;drools;dotnet10</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/your-repo/droolsdotnet</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -38,12 +38,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
-    <PackageReference Include="System.CodeDom" Version="9.0.0" />
-    <PackageReference Include="System.Security.Permissions" Version="9.0.0" />
-    <PackageReference Include="System.Security.AccessControl" Version="6.0.1" />
-    <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.11" />
+    <PackageReference Include="System.CodeDom" Version="10.0.11" />
+    <PackageReference Include="System.Security.Permissions" Version="10.0.11" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.11" />
   </ItemGroup>
 
   <ItemGroup>
