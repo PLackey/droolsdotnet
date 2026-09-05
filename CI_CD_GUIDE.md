@@ -1,6 +1,12 @@
-# Drools.NET CI/CD Pipeline Guide
+# Drools.NET CI/CD Pipeline Guide (GitLab CI - Legacy Reference)
 
-This document explains the CI/CD pipelines for both the legacy and modern implementations of Drools.NET.
+**⚠️ NOTICE**: This guide is for **GitLab CI reference only**. The project has been **migrated to GitHub Actions**.
+
+**🎯 For Current CI/CD Information**: See `GITHUB_ACTIONS_GUIDE.md` for the active GitHub Actions workflows.
+
+---
+
+This document explains the historical GitLab CI/CD pipelines for both the legacy and modern implementations of Drools.NET.
 
 ## 🎯 **Recommended: Modern Implementation Pipeline**
 
@@ -63,7 +69,7 @@ NUGET_API_KEY: "your-nuget-api-key"  # For NuGet.org deployment
 
 ## ⚠️ **Legacy Implementation Pipeline**
 
-### Location: `.gitlab-ci.yml` (root)
+### Location: `.github/workflows/legacy-ci.yml`
 
 The **legacy implementation pipeline** is for the IKVM-based version with known .NET 8 compatibility issues.
 
@@ -79,11 +85,11 @@ The **legacy implementation pipeline** is for the IKVM-based version with known 
 - May encounter IKVM-related warnings
 
 ##### 3. **Test** 🧪
-- **`test:build-validation`** - Simple build verification (replaces unit tests)
+- **test-build-validation** - Simple build verification (replaces unit tests)
   - Verifies compilation succeeds on .NET 8
   - Documents expected runtime limitations
   - No actual test execution (tests removed due to IKVM failures)
-- **`test:legacy-guidance`** - Documentation and user guidance
+- **test-legacy-guidance** - Documentation and user guidance
   - Explains test project removal rationale  
   - Provides migration recommendations to modern implementation
 
@@ -109,7 +115,7 @@ The **legacy implementation pipeline** is for the IKVM-based version with known 
 
 ## Pipeline Selection Guide
 
-### Use **Modern Implementation** (`Drools.NET.Modern/.gitlab-ci.yml`) when:
+### Use **Modern Implementation** (`Drools.NET.Modern/.github/workflows/modern-ci.yml`) when:
 - ✅ Starting new projects
 - ✅ Migrating from legacy version
 - ✅ Need .NET 8 compatibility
@@ -117,7 +123,7 @@ The **legacy implementation pipeline** is for the IKVM-based version with known 
 - ✅ Require cross-platform support
 - ✅ Need production-ready solution
 
-### Use **Legacy Implementation** (`.gitlab-ci.yml`) when:
+### Use **Legacy Implementation** (`.github/workflows/legacy-ci.yml`) when:
 - ⚠️ Maintaining existing legacy code
 - ⚠️ Need exact API compatibility  
 - ⚠️ Working with .NET Framework projects
@@ -160,8 +166,9 @@ PACKAGE_VERSION:       # Semantic version (3.0.0)
 - Manual: NuGet.org deployment (tags only)
 
 # Legacy Implementation  
-- Automatic: Build and test
-- Manual: All deployments (with warnings)
+- Automatic: Build and test validation
+- Manual: Production NuGet deployment (requires approval)
+- Automatic: GitHub Packages deployment
 ```
 
 ## Migration Strategy
@@ -238,14 +245,23 @@ Use GitLab's multi-project pipeline features or separate repositories for clean 
 
 ## Conclusion
 
-The **modern implementation pipeline** provides a robust, reliable CI/CD experience with 100% test success and modern .NET practices.
+The **modern implementation workflow** provides a robust, reliable CI/CD experience with 100% test success and modern .NET practices.
 
-The **legacy pipeline** now successfully builds and packages the IKVM-based library while clearly guiding users toward the modern implementation. **Test projects have been removed** to eliminate the 60% failure rate caused by IKVM/.NET 8 incompatibilities.
+The **legacy workflow** now successfully builds and packages the IKVM-based library while clearly guiding users toward the modern implementation. **Test projects have been removed** to eliminate the 60% failure rate caused by IKVM/.NET 8 incompatibilities.
 
-**Key Changes Made:**
-- ❌ **Removed failing test projects** (50 tests, 30 failing due to IKVM issues)
-- ✅ **Streamlined legacy pipeline** for build and packaging only
-- 📋 **Added comprehensive user guidance** pointing to modern implementation
-- 🎯 **Clear migration recommendations** for new development
+**Key GitHub Actions Features:**
+- ✅ **Parallel job execution** for faster builds
+- 📊 **Integrated test reporting** with detailed results
+- 🔒 **Built-in security scanning** and dependency checks  
+- 📦 **Artifact management** with automatic cleanup
+- 🎯 **Environment protection** for production deployments
+- 📧 **Rich notification system** with email and integrations
 
-**Final Recommendation**: Use `Drools.NET.Modern/.gitlab-ci.yml` for all new development and migration projects. The legacy pipeline serves compatibility and packaging needs only.
+**Migration from GitLab CI:**
+- ✅ **Converted all pipeline stages** to GitHub Actions jobs
+- ✅ **Preserved caching strategy** using actions/cache
+- ✅ **Enhanced artifact handling** with upload/download actions
+- ✅ **Improved security model** with GitHub environments
+- ✅ **Better integration** with GitHub ecosystem
+
+**Final Recommendation**: Use `Drools.NET.Modern/.github/workflows/modern-ci.yml` for all new development and migration projects. The legacy workflow serves compatibility and packaging needs only.

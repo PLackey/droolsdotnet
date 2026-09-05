@@ -17,7 +17,28 @@ This is a fork of https://github.com/codehaus/droolsdotnet
 - ✅ **Modern Tooling** - Full debugging and IntelliSense support
 - ✅ **Smaller Footprint** - Eliminates 22+ MB of IKVM dependencies
 
-### Usage - Modern Implementation:
+## CI/CD Pipeline Status
+
+[![Modern CI](https://github.com/username/droolsdotnet/actions/workflows/modern-ci.yml/badge.svg)](https://github.com/username/droolsdotnet/actions/workflows/modern-ci.yml)
+[![Legacy CI](https://github.com/username/droolsdotnet/actions/workflows/legacy-ci.yml/badge.svg)](https://github.com/username/droolsdotnet/actions/workflows/legacy-ci.yml)
+
+### Pipeline Overview:
+- **Modern**: ✅ 100% test success, pure .NET 8 implementation
+- **Legacy**: ⚠️ Build validation only, IKVM compatibility issues documented
+
+See `GITHUB_ACTIONS_GUIDE.md` for detailed workflow documentation.
+
+## 🚀 **Recommended: Use Modern Implementation**
+
+For new projects and migrations, use the **pure .NET 8 implementation**:
+
+### Installation - Modern Version:
+```bash
+# Install the modern pure .NET 8 version (RECOMMENDED)
+dotnet add package Drools.NET.Modern
+```
+
+### Quick Start - Modern Implementation:
 ```csharp
 using Drools.NET.Core;
 using Drools.NET.Core.Implementation;
@@ -37,22 +58,9 @@ workingMemory.AssertObject(new MyFact());
 workingMemory.FireAllRules();
 ```
 
-### Installation - Modern Implementation:
-```bash
-# Install the modern pure .NET 8 version
-dotnet add package Drools.NET.Modern
-```
+## ⚠️ **Legacy Implementation (Compatibility Only)**
 
-## ⚠️ **Legacy Implementation Compatibility Issues**
-
-**Current Status**: The legacy IKVM-based implementation compiles successfully on .NET 8, but has runtime limitations due to IKVM compatibility issues.
-
-**Issue**: The underlying IKVM-translated Java Drools library (version 3.0) uses .NET Framework-specific reflection APIs that are not available in .NET Core/8. This causes runtime errors when trying to create PackageBuilder instances.
-
-**Solutions**:
-1. **For New Projects**: Use the modern `Drools.NET.Modern` package (pure .NET 8)
-2. **For Legacy Migration**: Use the modern implementation as a drop-in replacement
-3. **For Contributors**: The modern implementation provides a foundation for further enhancements
+The original IKVM-based implementation is available for compatibility but **not recommended** for new development.
 
 ## Decompilation and Modernization Process
 
@@ -267,33 +275,52 @@ If you're upgrading from the previous version:
 4. **Project References**: Uses modern project reference format
 5. **NUnit**: If using the examples/tests, note that NUnit API has been updated to 4.x
 
-## NuGet Package
+## Documentation
 
-The project now automatically generates a NuGet package:
-- **Package ID**: Drools.NET
-- **Version**: 2.0.0
-- **Target Framework**: .NET 8.0
+- **`README.md`** - This file, overview and getting started
+- **`GITHUB_ACTIONS_GUIDE.md`** - Complete CI/CD workflow documentation  
+- **`MODERNIZATION_SUMMARY.md`** - Detailed modernization process and achievements
+- **`PARSER_IMPROVEMENTS.md`** - DRL parser enhancement details
+- **`LEGACY_PIPELINE_CLEANUP_SUMMARY.md`** - Legacy test cleanup rationale
+- **`CI_CD_GUIDE.md`** - GitLab CI reference (legacy)
 
-Install via Package Manager:
-```
-Install-Package Drools.NET
-```
+### Quick Links:
+- 🚀 **[Modern Implementation Guide](Drools.NET.Modern/README.md)** - Pure .NET 8 version
+- 📊 **[GitHub Actions Workflows](GITHUB_ACTIONS_GUIDE.md)** - CI/CD configuration
+- 🔄 **[Migration Guide](MODERNIZATION_SUMMARY.md)** - Legacy to modern migration
 
-Or via .NET CLI:
-```
+### Installation - Legacy Version (Not Recommended):
+```bash
+# Install legacy IKVM-based version (compatibility only)
 dotnet add package Drools.NET
 ```
+
+**Note**: The legacy version has known .NET 8 runtime issues. Use `Drools.NET.Modern` instead.
 
 ## Development
 
 ### Contributing
-1. Fork the repository
+1. Fork the repository on GitHub
 2. Create a feature branch: `git checkout -b feature/your-feature`
 3. Make your changes and add tests
 4. Run the test suite: `dotnet test`
-5. Commit your changes: `git commit -am 'Add new feature'`
-6. Push to the branch: `git push origin feature/your-feature`
-7. Submit a pull request
+5. Ensure GitHub Actions workflows pass
+6. Commit your changes: `git commit -am 'Add new feature'`
+7. Push to the branch: `git push origin feature/your-feature`
+8. Submit a pull request
+
+### Development Environment Setup
+1. Install .NET 8.0 SDK or later
+2. Clone the repository: `git clone https://github.com/username/droolsdotnet.git`
+3. Restore packages: `dotnet restore`
+4. Build solution: `dotnet build`
+5. Run tests: `dotnet test`
+
+### GitHub Actions Workflow Testing
+- **Modern Pipeline**: Validates pure .NET 8 implementation
+- **Legacy Pipeline**: Validates IKVM-based compatibility
+- **Pull Request Checks**: All workflows must pass for merging
+- **Deployment**: Automatic to GitHub Packages, manual to NuGet.org
 
 ### Project Structure
 ```
@@ -316,13 +343,24 @@ lib/                   # IKVM and Drools JAR dependencies
 ```
 
 ### Continuous Integration
-This project uses GitLab CI/CD with the following pipeline stages:
-- **Build**: Restore packages and compile the solution
-- **Test**: Run unit tests with coverage reporting
-- **Pack**: Create NuGet packages for releases
-- **Deploy**: Publish packages to NuGet registry (on tags)
+This project uses GitHub Actions with the following workflows:
 
-See `.gitlab-ci.yml` for complete pipeline configuration.
+#### Modern Implementation (`.github/workflows/modern-ci.yml`):
+- **Validate**: IKVM-free verification and project structure validation
+- **Build**: Pure .NET 8 compilation with artifact management
+- **Test**: 100% test success with coverage reporting
+- **Quality**: Code formatting and security scanning
+- **Package**: Modern NuGet package creation
+- **Deploy**: GitHub Packages and NuGet.org deployment
+
+#### Legacy Implementation (`.github/workflows/legacy-ci.yml`):
+- **Notice**: Warns about legacy limitations
+- **Build**: IKVM-based compilation with compatibility warnings
+- **Test**: Build validation only (unit tests removed due to IKVM issues)
+- **Package**: Legacy NuGet package with deprecation notices
+- **Deploy**: Limited deployment with user guidance to modern version
+
+See `GITHUB_ACTIONS_GUIDE.md` for complete workflow configuration and migration guidance.
 
 ## License
 
