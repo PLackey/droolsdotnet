@@ -90,7 +90,7 @@ namespace org.drools.dotnet.examples
 			this.p2 = p2;
 		}
 		
-		public string ToString()
+		public override string ToString()
 		{
 			return "{Line p1=" + this.p1 + ", p2=" + this.p2 + "}";
 		}

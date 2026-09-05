@@ -119,7 +119,7 @@ namespace org.drools.dotnet.examples
             this.subscription = subscription;
         }
 
-        public string toString()
+        public override string ToString()
         {
             return "[Customer " + this.name + " : " + this.subscription + "]";
         }
@@ -157,9 +157,9 @@ namespace org.drools.dotnet.examples
             this.status = "New";
         }
 
-        public string toString()
+        public override string ToString()
         {
-            return "[Ticket " + this.customer.toString() + " : " + this.status + "]";
+            return "[Ticket " + this.customer.ToString() + " : " + this.status + "]";
         }
     }
 

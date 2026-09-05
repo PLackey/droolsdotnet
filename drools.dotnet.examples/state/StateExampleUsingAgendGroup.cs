@@ -43,7 +43,7 @@ namespace org.drools.dotnet.examples
 	{
 		private class AnonymousClassDefaultAgendaEventListener : DefaultAgendaEventListener
 		{
-			public void  afterActivationFired(AfterActivationFiredEvent arg0)
+			public override void  afterActivationFired(AfterActivationFiredEvent arg0)
 			{
 				base.afterActivationFired(arg0);
 			}

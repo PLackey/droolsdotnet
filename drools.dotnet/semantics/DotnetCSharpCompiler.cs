@@ -151,7 +151,7 @@ namespace org.drools.dotnet.semantics
                     {
                         File.Delete(assembly.Location);
                     }
-                    catch (System.Exception e)
+                    catch (System.Exception _)
                     {
                         count++;
                     }

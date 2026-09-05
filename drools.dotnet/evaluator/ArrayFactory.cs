@@ -69,7 +69,7 @@ namespace org.drools.dotnet.evaluator
 				return object1.Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Array ==";
 			}
@@ -90,7 +90,7 @@ namespace org.drools.dotnet.evaluator
 				return EvaluatorUtil.ArrayEquals((System.Object[]) object1, (System.Object[]) object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Object !=";
 			}
@@ -122,7 +122,7 @@ namespace org.drools.dotnet.evaluator
 				}
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Array contains";
 			}

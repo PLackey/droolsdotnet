@@ -74,8 +74,9 @@ namespace org.drools.dotnet.examples
 				long totalload = 0;
 				long totalassert = 0;
 				long totalfire = 0;
-				long aveloadmem = 0;
-				long aveassertmem = 0;
+				// Commented out unused variables
+				// long aveloadmem = 0;
+				// long aveassertmem = 0;
 				System.Diagnostics.Process rt = System.Diagnostics.Process.GetCurrentProcess();
 				for (int c = 0; c < loop; c++)
 				{

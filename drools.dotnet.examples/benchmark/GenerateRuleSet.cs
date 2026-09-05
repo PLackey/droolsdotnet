@@ -134,7 +134,7 @@ namespace org.drools.dotnet.examples
 		{
 			// the number of rules
 			int count = 1000;
-			string objectName = "Account";
+			// Removed unused variable: string objectName = "Account";
 			string outputFileType1 = count + "_rules_type1.drl";
             string outputFileType2 = count + "_rules_type2.drl";
             string outputFileType3 = count + "_rules_type3.drl";

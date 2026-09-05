@@ -81,7 +81,7 @@ namespace org.drools.dotnet.evaluator
 				return ((System.Char) object1).Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Character ==";
 			}
@@ -105,7 +105,7 @@ namespace org.drools.dotnet.evaluator
 				return !((System.Char) object1).Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Character !=";
 			}
@@ -125,7 +125,7 @@ namespace org.drools.dotnet.evaluator
 				return ((System.Char) object1) < ((System.Char) object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Character <";
 			}
@@ -145,7 +145,7 @@ namespace org.drools.dotnet.evaluator
 				return ((System.Char) object1) <= ((System.Char) object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Character <=";
 			}
@@ -165,7 +165,7 @@ namespace org.drools.dotnet.evaluator
 				return ((System.Char) object1) > ((System.Char) object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Character >";
 			}
@@ -185,7 +185,7 @@ namespace org.drools.dotnet.evaluator
 				return ((System.Char) object1) >= ((System.Char) object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Character >=";
 			}

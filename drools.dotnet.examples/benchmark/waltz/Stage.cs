@@ -135,7 +135,7 @@ namespace org.drools.dotnet.examples
 				return - 9999999;
 		}
 		
-		public string ToString()
+		public override string ToString()
 		{
 			return "{Stage value=" + this.value_Renamed + "}";
 		}

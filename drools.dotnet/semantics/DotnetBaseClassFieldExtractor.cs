@@ -123,7 +123,7 @@ namespace org.drools.dotnet.semantics
         }
 
     
-        protected  Type getFieldType() {
+        public new Type getFieldType() {
         return this.fieldType;
         }
 
@@ -132,7 +132,7 @@ namespace org.drools.dotnet.semantics
         return this.objectType;
     }
 
-    public bool equals(object other) {
+    public override bool equals(object other) {
         if ( this == other ) {
             return true;
         }

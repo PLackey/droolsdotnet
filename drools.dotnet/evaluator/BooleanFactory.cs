@@ -70,7 +70,7 @@ namespace org.drools.dotnet.evaluator
 				return ((System.Boolean) object1).Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Boolean ==";
 			}
@@ -94,7 +94,7 @@ namespace org.drools.dotnet.evaluator
 				return !((System.Boolean) object1).Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Boolean !=";
 			}

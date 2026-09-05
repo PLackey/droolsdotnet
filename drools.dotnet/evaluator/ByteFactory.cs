@@ -81,7 +81,7 @@ namespace org.drools.dotnet.evaluator
 				return ((System.SByte) object1).Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Byte ==";
 			}
@@ -105,7 +105,7 @@ namespace org.drools.dotnet.evaluator
 				return !((System.SByte) object1).Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Byte !=";
 			}
@@ -125,7 +125,7 @@ namespace org.drools.dotnet.evaluator
 				return (sbyte) ((System.SByte) object1) < (sbyte) ((System.SByte) object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Byte <";
 			}
@@ -145,7 +145,7 @@ namespace org.drools.dotnet.evaluator
 				return (sbyte) ((System.SByte) object1) <= (sbyte) ((System.SByte) object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Byte <=";
 			}
@@ -165,7 +165,7 @@ namespace org.drools.dotnet.evaluator
 				return (sbyte) ((System.SByte) object1) > (sbyte) ((System.SByte) object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Byte >";
 			}
@@ -185,7 +185,7 @@ namespace org.drools.dotnet.evaluator
 				return (sbyte) ((System.SByte) object1) >= (sbyte) ((System.SByte) object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Byte >=";
 			}

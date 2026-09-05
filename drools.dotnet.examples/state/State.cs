@@ -84,7 +84,7 @@ namespace org.drools.dotnet.examples
 			return this.name.Equals(name) && this.state == state;
 		}
 		
-		public System.String ToString()
+		public override System.String ToString()
 		{
 			switch (this.state)
 			{
