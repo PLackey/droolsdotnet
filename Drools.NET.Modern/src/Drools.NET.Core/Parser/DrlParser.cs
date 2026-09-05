@@ -150,7 +150,6 @@ namespace Drools.NET.Core.Implementation
             var ruleStart = -1;
             var currentRule = new List<string>();
             var inRule = false;
-            var braceCount = 0;
 
             for (int i = 0; i < lines.Count; i++)
             {
@@ -162,19 +161,16 @@ namespace Drools.NET.Core.Implementation
                     ruleStart = line.Number;
                     inRule = true;
                     currentRule.Clear();
-                    braceCount = 0;
                 }
 
                 if (inRule)
                 {
                     currentRule.Add(lineContent);
                     
-                    // Count braces to determine rule end
-                    braceCount += lineContent.Count(c => c == '{') - lineContent.Count(c => c == '}');
-                    
-                    if (lineContent.Trim() == "end" || (braceCount == 0 && currentRule.Count > 1))
+                    // Check for rule end
+                    if (lineContent.Trim().Equals("end", StringComparison.OrdinalIgnoreCase))
                     {
-                        // End of rule
+                        // End of rule found
                         try
                         {
                             var ruleDescr = ParseSingleRule(currentRule, ruleStart, resourceName);
@@ -207,11 +203,11 @@ namespace Drools.NET.Core.Implementation
 
             var ruleContent = string.Join(" ", ruleLines);
             
-            // Extract rule name
-            var nameMatch = Regex.Match(ruleLines[0], @"rule\s+""([^""]+)""");
+            // Extract rule name - handle both quoted and unquoted names
+            var nameMatch = Regex.Match(ruleLines[0], @"rule\s+""([^""]+)""", RegexOptions.IgnoreCase);
             if (!nameMatch.Success)
             {
-                nameMatch = Regex.Match(ruleLines[0], @"rule\s+(\w+)");
+                nameMatch = Regex.Match(ruleLines[0], @"rule\s+([^\s]+)", RegexOptions.IgnoreCase);
             }
             
             if (!nameMatch.Success)
@@ -226,24 +222,40 @@ namespace Drools.NET.Core.Implementation
             var whenIndex = FindSectionIndex(ruleLines, "when");
             var thenIndex = FindSectionIndex(ruleLines, "then");
             
-            if (whenIndex == -1 || thenIndex == -1 || thenIndex <= whenIndex)
+            if (whenIndex == -1)
             {
-                AddError($"Rule '{ruleName}' must have 'when' and 'then' sections", resourceName, startLine);
+                AddError($"Rule '{ruleName}' is missing 'when' section", resourceName, startLine);
+                return null;
+            }
+            
+            if (thenIndex == -1)
+            {
+                AddError($"Rule '{ruleName}' is missing 'then' section", resourceName, startLine);
+                return null;
+            }
+            
+            if (thenIndex <= whenIndex)
+            {
+                AddError($"Rule '{ruleName}' has 'then' section before 'when' section", resourceName, startLine);
                 return null;
             }
 
-            // Extract LHS (when section)
+            // Extract LHS (when section) - everything between "when" and "then"
             var lhsLines = ruleLines.Skip(whenIndex + 1).Take(thenIndex - whenIndex - 1).ToList();
-            var lhs = new LeftHandSideDescriptor(string.Join(" ", lhsLines));
+            var lhsContent = string.Join(" ", lhsLines).Trim();
+            var lhs = new LeftHandSideDescriptor(lhsContent);
 
-            // Extract RHS (then section)
+            // Extract RHS (then section) - everything after "then" until "end"
             var rhsLines = ruleLines.Skip(thenIndex + 1).ToList();
+            
             // Remove 'end' if present
-            if (rhsLines.LastOrDefault()?.Trim() == "end")
+            if (rhsLines.Count > 0 && rhsLines.Last().Trim().Equals("end", StringComparison.OrdinalIgnoreCase))
             {
                 rhsLines.RemoveAt(rhsLines.Count - 1);
             }
-            var rhs = new RightHandSideDescriptor(string.Join(" ", rhsLines));
+            
+            var rhsContent = string.Join(" ", rhsLines).Trim();
+            var rhs = new RightHandSideDescriptor(rhsContent);
 
             return new RuleDescriptor
             {
@@ -261,9 +273,12 @@ namespace Drools.NET.Core.Implementation
 
         private int FindSectionIndex(List<string> lines, string section)
         {
+            var sectionPattern = new Regex($@"\b{Regex.Escape(section)}\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            
             for (int i = 0; i < lines.Count; i++)
             {
-                if (lines[i].Trim().StartsWith(section))
+                var trimmedLine = lines[i].Trim();
+                if (sectionPattern.IsMatch(trimmedLine))
                 {
                     return i;
                 }
