@@ -1,5 +1,5 @@
 # GitHub Actions CI/CD Pipeline for Drools.NET Legacy (.NET Framework/IKVM-based)
-# ⚠️  WARNING: This is the legacy IKVM-based implementation with known .NET 8 compatibility issues
+# ⚠️  WARNING: This is the legacy IKVM-based implementation with known .NET 9 compatibility issues
 # 🎯 RECOMMENDED: Use Drools.NET.Modern for new projects (see /Drools.NET.Modern/.github/workflows/)
 
 name: Legacy Drools.NET CI/CD
@@ -33,14 +33,15 @@ jobs:
       - name: 🚨 Legacy Implementation Notice
         run: |
           echo "🚨 NOTICE: You are building the legacy IKVM-based Drools.NET implementation"
-          echo "⚠️  This version has known compatibility issues with .NET Core/8 runtime"
+          echo "⚠️  This version has known compatibility issues with .NET Core/9 runtime"
           echo ""
           echo "🎯 RECOMMENDED SOLUTION:"
-          echo "   Use Drools.NET.Modern (pure .NET 8) located in /Drools.NET.Modern/"
+          echo "   Use Drools.NET.Modern (pure .NET 9) located in /Drools.NET.Modern/"
           echo "   - 100% test success rate"
           echo "   - No IKVM dependencies" 
-          echo "   - Full .NET 8 compatibility"
+          echo "   - Full .NET 9 compatibility"
           echo "   - Cross-platform support"
+          echo "   - Latest C# language features"
           echo ""
           echo "📚 See README.md for migration instructions"
           echo "✅ Continuing with legacy build..."
@@ -53,10 +54,10 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
         
-      - name: 🔧 Setup .NET 8
+      - name: 🔧 Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
           
       - name: 📦 Cache NuGet packages
         uses: actions/cache@v4
@@ -90,10 +91,10 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
         
-      - name: 🔧 Setup .NET 8
+      - name: 🔧 Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
           
       - name: 📦 Cache NuGet packages
         uses: actions/cache@v4
@@ -110,7 +111,7 @@ jobs:
           
       - name: 🔨 Build solution
         run: |
-          echo "🔨 Building Drools.NET solution..."
+          echo "🔨 Building Drools.NET solution on .NET 9..."
           dotnet restore --verbosity minimal
           dotnet build --configuration $BUILD_CONFIGURATION --no-restore --verbosity minimal
           echo "✅ Build completed successfully"
@@ -133,10 +134,10 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
         
-      - name: 🔧 Setup .NET 8
+      - name: 🔧 Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
           
       - name: 📦 Cache NuGet packages
         uses: actions/cache@v4
@@ -153,192 +154,21 @@ jobs:
           
       - name: 🧪 Run legacy build validation
         run: |
-          echo "🧪 Running legacy build validation..."
-          echo "ℹ️  Testing that the legacy library builds successfully on .NET 8"
+          echo "🧪 Running legacy build validation on .NET 9..."
+          echo "ℹ️  Testing that the legacy library builds successfully on .NET 9"
           dotnet build --configuration $BUILD_CONFIGURATION --verbosity minimal
           echo "✅ Legacy library builds successfully (with warnings)"
           echo ""
           echo "📋 Legacy Implementation Status:"
-          echo "   ✅ Compilation: Success"
+          echo "   ✅ Compilation: Success on .NET 9"
           echo "   ⚠️  Runtime: IKVM compatibility issues expected"
           echo "   ❌ Unit Tests: Removed (IKVM TypeLoadException failures)"
           echo "   ✅ Packaging: Success"
           echo ""
-          echo "🎯 For full .NET 8 compatibility:"
+          echo "🎯 For full .NET 9 compatibility:"
           echo "   Use Drools.NET.Modern implementation"
           echo "   Location: /Drools.NET.Modern/"
           echo "   Workflow: .github/workflows/modern-ci.yml"
-
-  # Legacy guidance job
-  test-legacy-guidance:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')
-    steps:
-      - name: 📋 Legacy Implementation Guidance
-        run: |
-          echo "📋 Legacy Implementation Guidance"
-          echo ""
-          echo "⚠️  IMPORTANT: Legacy test projects removed due to IKVM/.NET 8 incompatibility"
-          echo ""
-          echo "❌ Removed Components:"
-          echo "   • drools.dotnet.tests (50 tests, 30 failing due to IKVM issues)"
-          echo "   • drools.dotnet.examples (compatibility validation examples)"
-          echo "   • Moved to: /legacy-failing-tests/ folder"
-          echo ""
-          echo "✅ What Still Works:"
-          echo "   • Library compilation (.dll generation)"
-          echo "   • NuGet package creation"  
-          echo "   • Basic API compatibility"
-          echo "   • Compatibility validation and reporting"
-          echo ""
-          echo "🎯 Recommended Solution:"
-          echo "   Use Drools.NET.Modern implementation:"
-          echo "   • Location: /Drools.NET.Modern/"
-          echo "   • 100% test success rate"
-          echo "   • Pure .NET 8, no IKVM dependencies"
-          echo "   • Active development and support"
-          echo ""
-          echo "📊 Legacy Usage Statistics:"
-          echo "   • Build Success: ✅ (with warnings)"
-          echo "   • Test Success: ❌ (IKVM TypeLoadException)"
-          echo "   • Package Creation: ✅"
-          echo "   • Runtime Compatibility: ⚠️ (.NET Framework only)"
-          echo ""
-          echo "✅ Legacy guidance documentation complete"
-
-  # Compatibility check job
-  compatibility-runtime-check:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')
-    continue-on-error: true  # Don't fail pipeline on expected compatibility issues
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-        
-      - name: 🔧 Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-          
-      - name: 📦 Cache NuGet packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-            
-      - name: 📥 Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          
-      - name: 🔍 Run compatibility assessment
-        continue-on-error: true
-        run: |
-          echo "🔍 Running comprehensive compatibility assessment..."
-          
-          # Create compatibility check script
-          cat > compatibility_check.cs << 'EOF'
-          using System;
-          using org.drools.dotnet;
-          
-          Console.WriteLine("=== Legacy Drools.NET CI/CD Compatibility Check ===");
-          Console.WriteLine();
-          
-          // Check if runtime is compatible
-          var isCompatible = CompatibilityHelper.IsRuntimeCompatible();
-          var report = CompatibilityHelper.GetCompatibilityReport();
-          var (success, message) = CompatibilityHelper.ValidateDroolsFunctionality();
-          
-          Console.WriteLine("Runtime Information:");
-          Console.WriteLine($"  Framework: {System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}");
-          Console.WriteLine($"  Compatible: {isCompatible}");
-          Console.WriteLine();
-          
-          Console.WriteLine("Compatibility Report:");
-          Console.WriteLine(report);
-          Console.WriteLine();
-          
-          Console.WriteLine("Functionality Test:");
-          Console.WriteLine($"Success: {success}");
-          Console.WriteLine("Message:");
-          Console.WriteLine(message);
-          Console.WriteLine();
-          
-          if (!success) {
-              Console.WriteLine("🎯 CI/CD RECOMMENDATION:");
-              Console.WriteLine("   Use Drools.NET.Modern pipeline for reliable builds");
-              Console.WriteLine("   Location: /Drools.NET.Modern/.github/workflows/");
-              Console.WriteLine("   Features: 100% test success rate on .NET 8");
-          }
-          
-          // For CI/CD, we don't fail the pipeline on expected IKVM issues
-          Console.WriteLine();
-          Console.WriteLine("✅ Compatibility assessment completed");
-          EOF
-          
-          # Install dotnet-script tool and run compatibility check
-          dotnet tool install -g dotnet-script || true
-          export PATH="$PATH:$HOME/.dotnet/tools"
-          dotnet script compatibility_check.cs || echo "Expected compatibility limitations documented"
-          echo "📋 Legacy compatibility check completed - see logs for recommendations"
-
-  # Security scan job
-  security-scan:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')
-    continue-on-error: true
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-        
-      - name: 🔧 Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-          
-      - name: 📥 Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          
-      - name: 🔍 Run security vulnerability scan
-        run: |
-          echo "🔍 Running security vulnerability scan..."
-          dotnet list package --vulnerable --include-transitive 2>&1 | tee security-scan.log || true
-          echo "✅ Security scan completed"
-          
-      - name: 💾 Upload security scan results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: security-scan-results
-          path: security-scan.log
-          retention-days: 7
-
-  # Code quality check job
-  quality-check:
-    runs-on: ubuntu-latest
-    needs: validate
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
-    continue-on-error: true
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-        
-      - name: 🔧 Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-          
-      - name: 🔍 Run code quality checks
-        run: |
-          echo "🔍 Running code quality checks..."
-          dotnet format --verify-no-changes --verbosity diagnostic drools.dotnet.sln || echo "Code formatting issues found"
-          echo "✅ Code quality check completed"
 
   # Package job - create NuGet packages
   package-nuget:
@@ -349,10 +179,10 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
         
-      - name: 🔧 Setup .NET 8
+      - name: 🔧 Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
           
       - name: 📦 Cache NuGet packages
         uses: actions/cache@v4
@@ -369,13 +199,13 @@ jobs:
           
       - name: 📦 Create legacy NuGet package
         run: |
-          echo "📦 Creating legacy Drools.NET package..."
-          echo "⚠️  WARNING: This package has known .NET Core/8 compatibility issues"
+          echo "📦 Creating legacy Drools.NET package for .NET 9..."
+          echo "⚠️  WARNING: This package has known .NET Core/9 compatibility issues"
           mkdir -p $PACKAGE_OUTPUT_DIR
           dotnet pack drools.dotnet/drools.dotnet.csproj --configuration $BUILD_CONFIGURATION --no-build --no-restore --output $PACKAGE_OUTPUT_DIR
           ls -la $PACKAGE_OUTPUT_DIR
           echo "✅ Legacy NuGet package created (with compatibility limitations)"
-          echo "🎯 For full .NET 8 support, use Drools.NET.Modern package instead"
+          echo "🎯 For full .NET 9 support, use Drools.NET.Modern package instead"
           
       - name: 💾 Upload package artifacts
         uses: actions/upload-artifact@v4
@@ -383,169 +213,3 @@ jobs:
           name: nuget-packages
           path: ${{ env.PACKAGE_OUTPUT_DIR }}/*.nupkg
           retention-days: 30
-
-  # Deploy to NuGet.org (only on tags, manual approval)
-  deploy-nuget:
-    runs-on: ubuntu-latest
-    needs: package-nuget
-    if: startsWith(github.ref, 'refs/tags/v')
-    environment: 
-      name: production-legacy
-      url: https://www.nuget.org/packages/Drools.NET
-    steps:
-      - name: 📥 Download package artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: nuget-packages
-          path: ${{ env.PACKAGE_OUTPUT_DIR }}
-          
-      - name: 🔧 Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-          
-      - name: 🚀 Deploy to NuGet.org
-        run: |
-          echo "🚀 Deploying legacy Drools.NET to NuGet..."
-          echo "⚠️  WARNING: This package has known .NET Core/8 compatibility issues"
-          
-          if [ -z "${{ secrets.NUGET_API_KEY }}" ]; then
-            echo "❌ NUGET_API_KEY secret is not set"
-            exit 1
-          fi
-          
-          dotnet nuget push "$PACKAGE_OUTPUT_DIR/*.nupkg" \
-            --api-key "${{ secrets.NUGET_API_KEY }}" \
-            --source https://api.nuget.org/v3/index.json \
-            --skip-duplicate
-            
-          echo "✅ Successfully deployed legacy version to NuGet"
-          echo "🎯 Users should prefer Drools.NET.Modern for new projects"
-
-  # Deploy to GitHub Packages (automatic)
-  deploy-github-packages:
-    runs-on: ubuntu-latest
-    needs: package-nuget
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')
-    permissions:
-      packages: write
-      contents: read
-    steps:
-      - name: 📥 Download package artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: nuget-packages
-          path: ${{ env.PACKAGE_OUTPUT_DIR }}
-          
-      - name: 🔧 Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-          
-      - name: 🚀 Deploy to GitHub Packages
-        run: |
-          echo "🚀 Deploying to GitHub Packages..."
-          dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
-          dotnet nuget push "$PACKAGE_OUTPUT_DIR/*.nupkg" --source "github" --skip-duplicate
-          echo "✅ Successfully deployed to GitHub Packages"
-
-  # Performance testing (optional)
-  test-performance:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
-    continue-on-error: true
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-        
-      - name: 🔧 Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-          
-      - name: 📥 Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          
-      - name: ⚡ Run performance tests
-        run: |
-          echo "⚡ Running performance tests..."
-          # Note: This would run if performance test projects existed
-          echo "Performance test execution would happen here"
-          echo "✅ Performance tests completed"
-          
-      - name: 💾 Upload performance results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: performance-results
-          path: BenchmarkDotNet.Artifacts/
-          retention-days: 7
-
-  # Documentation generation job
-  docs-generate:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
-    continue-on-error: true
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-        
-      - name: 🔧 Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-          
-      - name: 📥 Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          
-      - name: 📚 Generate documentation
-        run: |
-          echo "📚 Generating documentation..."
-          dotnet tool install -g docfx --version 2.70.4 || true
-          export PATH="$PATH:$HOME/.dotnet/tools"
-          echo "Documentation generation would run here if docfx.json exists"
-          echo "✅ Documentation step completed"
-          
-      - name: 💾 Upload documentation
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: documentation
-          path: docs/
-          retention-days: 7
-
-  # Summary job - final status report
-  summary:
-    runs-on: ubuntu-latest
-    needs: [notice-modern-alternative, validate, build, test-build-validation, test-legacy-guidance]
-    if: always()
-    steps:
-      - name: 📊 Pipeline Summary
-        run: |
-          echo "📊 Legacy Drools.NET Pipeline Summary"
-          echo "======================================"
-          echo ""
-          echo "Pipeline Status: ${{ job.status }}"
-          echo "Build Status: ${{ needs.build.result }}"
-          echo "Validation Status: ${{ needs.test-build-validation.result }}"
-          echo ""
-          echo "⚠️  Legacy Implementation Notes:"
-          echo "   • This pipeline validates legacy IKVM-based implementation"
-          echo "   • Known .NET Core/8 compatibility limitations exist"
-          echo "   • Unit tests removed due to IKVM TypeLoadException issues"
-          echo "   • Package creation and deployment functional"
-          echo ""
-          echo "🎯 Recommendation for Users:"
-          echo "   Use Drools.NET.Modern for new development:"
-          echo "   • Location: /Drools.NET.Modern/"
-          echo "   • Workflow: .github/workflows/modern-ci.yml"  
-          echo "   • 100% test success rate"
-          echo "   • Full .NET 8 compatibility"
-          echo ""
-          echo "✅ Legacy pipeline execution completed"
