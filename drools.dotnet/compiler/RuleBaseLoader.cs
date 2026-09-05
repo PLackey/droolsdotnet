@@ -33,7 +33,7 @@ using org.drools.dotnet.util;
 
 namespace org.drools.dotnet.compiler
 {
-    class RuleBaseLoader
+    public class RuleBaseLoader
     {
         private org.drools.compiler.RuleBaseLoader _javaRuleBaseLoader = org.drools.compiler.RuleBaseLoader.getInstance();
 

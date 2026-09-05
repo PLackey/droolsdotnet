@@ -1,0 +1,25 @@
+package org.drools.dotnet.tests
+
+rule "Integer Greater Than"
+    when
+        $number : TestNumber( value > 100 )
+    then
+        $number.category = "HIGH";
+        update($number);
+end
+
+rule "Integer Less Than"
+    when
+        $number : TestNumber( value < 50 )
+    then
+        $number.category = "LOW";
+        update($number);
+end
+
+rule "Integer In Range"
+    when
+        $number : TestNumber( value >= 50 && value <= 100 )
+    then
+        $number.category = "MEDIUM";
+        update($number);
+end

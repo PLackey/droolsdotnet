@@ -80,7 +80,7 @@ namespace org.drools.dotnet.evaluator
 				return ((System.ValueType) object1).Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Double ==";
 			}
@@ -104,7 +104,7 @@ namespace org.drools.dotnet.evaluator
 				return !((System.ValueType) object1).Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Double !=";
 			}
@@ -124,7 +124,7 @@ namespace org.drools.dotnet.evaluator
 				return System.Convert.ToDouble(((System.ValueType) object1)) < System.Convert.ToDouble(((System.ValueType) object2));
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Double <";
 			}
@@ -144,7 +144,7 @@ namespace org.drools.dotnet.evaluator
 				return System.Convert.ToDouble(((System.ValueType) object1)) <= System.Convert.ToDouble(((System.ValueType) object2));
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Double <=";
 			}
@@ -164,7 +164,7 @@ namespace org.drools.dotnet.evaluator
 				return System.Convert.ToDouble(((System.ValueType) object1)) > System.Convert.ToDouble(((System.ValueType) object2));
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Double >";
 			}
@@ -184,7 +184,7 @@ namespace org.drools.dotnet.evaluator
 				return System.Convert.ToDouble(((System.ValueType) object1)) >= System.Convert.ToDouble(((System.ValueType) object2));
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Double >=";
 			}

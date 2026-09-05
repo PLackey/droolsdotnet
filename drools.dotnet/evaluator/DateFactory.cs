@@ -125,7 +125,7 @@ namespace org.drools.dotnet.evaluator
 				}
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Date ==";
 			}
@@ -161,7 +161,7 @@ namespace org.drools.dotnet.evaluator
 				}
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Date !=";
 			}
@@ -189,7 +189,7 @@ namespace org.drools.dotnet.evaluator
 				}
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Date <";
 			}
@@ -217,7 +217,7 @@ namespace org.drools.dotnet.evaluator
 				}
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Date <=";
 			}
@@ -245,7 +245,7 @@ namespace org.drools.dotnet.evaluator
 				}
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Date >";
 			}
@@ -273,7 +273,7 @@ namespace org.drools.dotnet.evaluator
 				}
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Date >=";
 			}
@@ -287,7 +287,7 @@ namespace org.drools.dotnet.evaluator
 			{
                 return System.DateTime.ParseExact(input, DateFactory.DEFAULT_FORMAT_MASK, CultureInfo.InvariantCulture);
 			}
-			catch (System.FormatException e)
+			catch (System.FormatException _)
 			{
 				throw new System.ArgumentException("Invalid date input format: [" + input + "] it should follow: [" + DateFactory.DATE_FORMAT_MASK + "]");
 			}

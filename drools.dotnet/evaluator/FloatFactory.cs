@@ -81,7 +81,7 @@ namespace org.drools.dotnet.evaluator
 				return ((System.ValueType) object1).Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Float ==";
 			}
@@ -105,7 +105,7 @@ namespace org.drools.dotnet.evaluator
 				return !((System.ValueType) object1).Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Float !=";
 			}
@@ -125,7 +125,7 @@ namespace org.drools.dotnet.evaluator
 				return System.Convert.ToSingle(((System.ValueType) object1)) < System.Convert.ToSingle(((System.ValueType) object2));
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Float <";
 			}
@@ -145,7 +145,7 @@ namespace org.drools.dotnet.evaluator
 				return System.Convert.ToSingle(((System.ValueType) object1)) <= System.Convert.ToSingle(((System.ValueType) object2));
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Float <=";
 			}
@@ -165,7 +165,7 @@ namespace org.drools.dotnet.evaluator
 				return System.Convert.ToSingle(((System.ValueType) object1)) > System.Convert.ToSingle(((System.ValueType) object2));
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Float >";
 			}
@@ -185,7 +185,7 @@ namespace org.drools.dotnet.evaluator
 				return System.Convert.ToSingle(((System.ValueType) object1)) >= System.Convert.ToSingle(((System.ValueType) object2));
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Float >=";
 			}

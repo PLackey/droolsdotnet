@@ -1,0 +1,17 @@
+package org.drools.dotnet.tests
+
+rule "Simple Test Rule"
+    when
+        $message : Message( status == Message.HELLO )
+    then
+        $message.message = "Hello from Drools!";
+        update($message);
+end
+
+rule "Goodbye Rule"
+    when
+        $message : Message( status == Message.GOODBYE )
+    then
+        $message.message = "Goodbye from Drools!";
+        update($message);
+end

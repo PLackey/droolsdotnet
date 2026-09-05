@@ -96,7 +96,7 @@ namespace org.drools.dotnet.semantics
             }
         }
 
-        public Type lookupFromCache(string className)
+        public new Type lookupFromCache(string className)
         {
             object objs = this.cachedImports[className];
             if (objs != null)
@@ -121,7 +121,7 @@ namespace org.drools.dotnet.semantics
             {
                 return Class.forName(type.AssemblyQualifiedName);
             }
-            catch (System.Exception e)
+            catch (System.Exception _)
             {
                 return Class.forName("cli." + type.FullName);
             }
@@ -144,7 +144,7 @@ namespace org.drools.dotnet.semantics
                     clazz = Type.GetType(className);
 
                 }
-                catch (System.Exception e)
+                catch (System.Exception _)
                 {
                     clazz = null;
                 }
@@ -192,7 +192,7 @@ namespace org.drools.dotnet.semantics
             return clazz;
         }
 
-        public bool isEmpty()
+        public new bool isEmpty()
         {
             return (this.imports.size() == 0);
         }

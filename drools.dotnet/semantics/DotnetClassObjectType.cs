@@ -62,7 +62,7 @@ namespace org.drools.dotnet.semantics
             return Class.forName(this.objectTypeClass.AssemblyQualifiedName);
         }
 
-        public bool matches(object obj)
+        public override bool matches(object obj)
         {
             if (obj.GetType().Equals(getClassType()))
                 return true;

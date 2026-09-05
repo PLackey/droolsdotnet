@@ -70,7 +70,7 @@ namespace org.drools.dotnet.evaluator
 				return object1.Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "String ==";
 			}
@@ -95,7 +95,7 @@ namespace org.drools.dotnet.evaluator
 				return !object1.Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "String !=";
 			}
@@ -127,7 +127,7 @@ namespace org.drools.dotnet.evaluator
                 return target.Equals(pattern); // target.matches(pattern);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "String !=";
 			}

@@ -85,7 +85,7 @@ namespace org.drools.dotnet.evaluator
 				return object1.Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Object ==";
 			}
@@ -109,7 +109,7 @@ namespace org.drools.dotnet.evaluator
 				return !object1.Equals(object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Object !=";
 			}
@@ -131,7 +131,7 @@ namespace org.drools.dotnet.evaluator
 				return val < 0;
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Object <";
 			}
@@ -152,7 +152,7 @@ namespace org.drools.dotnet.evaluator
 				return comp.CompareTo(object2) <= 0;
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Object <=";
 			}
@@ -173,7 +173,7 @@ namespace org.drools.dotnet.evaluator
 				return comp.CompareTo(object2) > 0;
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Object >";
 			}
@@ -194,7 +194,7 @@ namespace org.drools.dotnet.evaluator
 				return comp.CompareTo(object2) >= 0;
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Object >=";
 			}
@@ -219,7 +219,7 @@ namespace org.drools.dotnet.evaluator
                 return EvaluatorUtil.CollectionsContains(col, object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Object contains";
 			}
@@ -244,7 +244,7 @@ namespace org.drools.dotnet.evaluator
 				return !EvaluatorUtil.CollectionsContains(col, object2);
 			}
 			
-			public virtual System.String toString()
+			public override System.String toString()
 			{
 				return "Object excludes";
 			}
